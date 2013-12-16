@@ -1,6 +1,5 @@
 #!/usr/bin/env perl
 
-use Modern::Perl '2013';
 use Mojo::Loader;
 use Mojo::JSON;
 use Mojo::UserAgent;
