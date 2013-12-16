@@ -11,7 +11,7 @@ use utf8::all;
 use autodie;
 
 # Read API key and forum name from a config file using autodie
-my $config_file = slurp '../conf/output_most_comments.json';
+my $config_file = slurp './conf/popular_threads_by_comments.json';
 
 my $json = Mojo::JSON->new;
 my $conf = $json->decode( $config_file );
