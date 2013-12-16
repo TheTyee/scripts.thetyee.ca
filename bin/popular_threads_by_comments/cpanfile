@@ -1,9 +1,9 @@
-requires 'Mojo::Loader';
-requires 'Mojo::JSON';
-requires 'Mojo::UserAgent';
-requires 'Mojo::Template';
-requires 'Mojo::Util';
-requires 'Data::Dumper';
-requires 'Readonly';
-requires 'utf8::all';
-requires 'autodie';
+requires 'Mojo::Loader', '0';
+requires 'Mojo::JSON', '0';
+requires 'Mojo::UserAgent', '0';
+requires 'Mojo::Template', '0';
+requires 'Mojo::Util', '0';
+requires 'Data::Dumper', '0';
+requires 'Readonly', '0';
+requires 'utf8::all', '0';
+requires 'autodie', '0';
