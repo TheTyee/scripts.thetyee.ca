@@ -63,6 +63,6 @@ __DATA__
 % next if ( $thread->{'path'} eq '/' || $thread->{'path'} eq '/ReportedElsewhere/' );
 % my $title = $thread->{'title'};
 % $title    =~ s/The Tyee – //gi;
-    <li><a href="<%= $thread->{'path'} %>"><%= $title %></a> (<span><%= $thread->{'people'} reading</span>)</li>
+    <li><a href="<%= $thread->{'path'} %>"><%= $title %></a> (<span><%= $thread->{'people'} %> reading</span>)</li>
 % }
 </ul>
