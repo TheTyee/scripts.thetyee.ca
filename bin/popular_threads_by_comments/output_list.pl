@@ -5,13 +5,14 @@ use Mojo::JSON;
 use Mojo::UserAgent;
 use Mojo::Template;
 use Mojo::Util qw/ encode slurp spurt /;
-use Data::Dumper;
+use FindBin '$Bin';
 use Readonly;
 use utf8::all;
 use autodie;
+use Data::Dumper;
 
 # Read API key and forum name from a config file using autodie
-my $config_file = slurp './conf/popular_threads_by_comments.json';
+my $config_file = slurp "$Bin/conf/popular_threads_by_comments.json";
 
 my $json = Mojo::JSON->new;
 my $conf = $json->decode( $config_file );
