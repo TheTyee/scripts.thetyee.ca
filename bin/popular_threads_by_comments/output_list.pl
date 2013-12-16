@@ -57,7 +57,7 @@ if ( $threads ) {
 __DATA__
 @@ comment_list
 % my ($data) = @_;
-<ul class="links">
+<ul>
 % for my $thread ( @$data ) {
     <li><a href="<%= $thread->{'link'} %>"><%= $thread->{'title'} %></a> <span>(<%= $thread->{'posts'} %>)</span></li>
 % }
