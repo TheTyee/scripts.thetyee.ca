@@ -42,20 +42,22 @@ my $data = $json->decode( $res );
 # Store the array data that we're after
 my $threads = $data->{'response'};
 
-# Render the data in a template
-my $loader   = Mojo::Loader->new;
-my $template = $loader->data( __PACKAGE__, 'comment_list' );
-my $mt       = Mojo::Template->new;
-my $output_html = $mt->render( $template, $threads );
-$output_html = encode 'UTF-8', $output_html;
+# Render the data in a template, TODO if we have new data
+if ( $threads ) {
+    my $loader   = Mojo::Loader->new;
+    my $template = $loader->data( __PACKAGE__, 'comment_list' );
+    my $mt       = Mojo::Template->new;
+    my $output_html = $mt->render( $template, $threads );
+    $output_html = encode 'UTF-8', $output_html;
 
-# Write the template output to a filehandle
-spurt $output_html, $output_file;
+    # Write the template output to a filehandle
+    spurt $output_html, $output_file;
+};
 
 __DATA__
 @@ comment_list
 % my ($data) = @_;
-<ul>
+<ul class="links">
 % for my $thread ( @$data ) {
     <li><a href="<%= $thread->{'link'} %>"><%= $thread->{'title'} %></a> <span>(<%= $thread->{'posts'} %>)</span></li>
 % }
