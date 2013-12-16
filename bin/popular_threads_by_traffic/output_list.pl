@@ -12,7 +12,7 @@ use autodie;
 use Data::Dumper;
 
 # Read API key and forum name from a config file using autodie
-my $config_file = slurp "$Bin/conf/popular_threads_by_comments.json";
+my $config_file = slurp "$Bin/conf/popular_threads_by_traffic.json";
 
 my $json = Mojo::JSON->new;
 my $conf = $json->decode( $config_file );
@@ -23,14 +23,15 @@ die 'No output file specified' unless $output_file;
 
 # Set any constants
 Readonly my $API      => $conf->{'api_url'};
-Readonly my $RESOURCE => '/threads/listPopular.json';
+Readonly my $RESOURCE => '/live/toppages/v3/';
 Readonly my $URL      => $API . $RESOURCE;
 
 # Set arguments for the API call: api_key, forum, limit, etc.
 my $args = { 
-    api_key => $conf->{'api_key'},
-    forum   => $conf->{'forum'},
-    limit   => '10'
+    apikey => $conf->{'api_key'},
+    host   => $conf->{'host'},
+    limit   => '12',
+    exclude_people => '10',
 };
 
 # Make request to Disqus API, check response status
@@ -40,12 +41,12 @@ my $res = $ua->get( $URL => form => $args )->res->body;
 my $data = $json->decode( $res );
 
 # Store the array data that we're after
-my $threads = $data->{'response'};
+my $threads = $data->{'pages'};
 
-# Render the data in a template, if we have new data
+# Render the data in a template, TODO if we have new data
 if ( $threads ) {
     my $loader   = Mojo::Loader->new;
-    my $template = $loader->data( __PACKAGE__, 'comment_list' );
+    my $template = $loader->data( __PACKAGE__, 'traffic_list' );
     my $mt       = Mojo::Template->new;
     my $output_html = $mt->render( $template, $threads );
     $output_html = encode 'UTF-8', $output_html;
@@ -55,10 +56,13 @@ if ( $threads ) {
 };
 
 __DATA__
-@@ comment_list
+@@ traffic_list
 % my ($data) = @_;
 <ul>
 % for my $thread ( @$data ) {
-    <li><a href="<%= $thread->{'link'} %>"><%= $thread->{'title'} %></a> <span>(<%= $thread->{'posts'} %> comments)</span></li>
+% next if ( $thread->{'path'} eq '/' || $thread->{'path'} eq '/ReportedElsewhere/' );
+% my $title = $thread->{'title'};
+% $title    =~ s/The Tyee – //gi;
+    <li><a href="<%= $thread->{'path'} %>"><%= $title %></a> (<span><%= $thread->{'people'} reading</span>)</li>
 % }
 </ul>
