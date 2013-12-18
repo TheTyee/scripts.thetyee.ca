@@ -57,8 +57,6 @@ __DATA__
 % my ($data) = @_;
 <ul>
 % for my $thread ( @$data ) {
-%# my $title = $thread->{'title'};
-%# $title    =~ s/The Tyee – //gi;
-    <li><a href="<%= $thread->{'url'} %>"><%= $thread->{'title'} %></a> <span>(<%= $thread->{'count'} %> shares)</span></li>
+    <li><a href="<%= $thread->{'url'} %>"><%= $thread->{'title'} %></a></li>
 % }
 </ul>

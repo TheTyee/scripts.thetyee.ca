@@ -46,7 +46,7 @@ my $threads = $data->{'pages'};
 # Render the data in a template, TODO if we have new data
 if ( $threads ) {
     my $loader   = Mojo::Loader->new;
-    my $template = $loader->data( __PACKAGE__, 'traffic_list' );
+    my $template = $loader->data( __PACKAGE__, 'list' );
     my $mt       = Mojo::Template->new;
     my $output_html = $mt->render( $template, $threads );
     $output_html = encode 'UTF-8', $output_html;
@@ -56,13 +56,13 @@ if ( $threads ) {
 };
 
 __DATA__
-@@ traffic_list
+@@ list
 % my ($data) = @_;
 <ul>
 % for my $thread ( @$data ) {
 % next if ( $thread->{'path'} eq '/' || $thread->{'path'} eq '/ReportedElsewhere/' );
 % my $title = $thread->{'title'};
 % $title    =~ s/The Tyee – //gi;
-    <li><a href="<%= $thread->{'path'} %>"><%= $title %></a> <span>(<%= $thread->{'stats'}{'people'} %> reading)</span></li>
+    <li><a href="<%= $thread->{'path'} %>"><%= $title %></a></li>
 % }
 </ul>

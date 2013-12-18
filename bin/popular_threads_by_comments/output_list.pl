@@ -45,7 +45,7 @@ my $threads = $data->{'response'};
 # Render the data in a template, if we have new data
 if ( $threads ) {
     my $loader   = Mojo::Loader->new;
-    my $template = $loader->data( __PACKAGE__, 'comment_list' );
+    my $template = $loader->data( __PACKAGE__, 'list' );
     my $mt       = Mojo::Template->new;
     my $output_html = $mt->render( $template, $threads );
     $output_html = encode 'UTF-8', $output_html;
@@ -55,7 +55,7 @@ if ( $threads ) {
 };
 
 __DATA__
-@@ comment_list
+@@ list
 % my ($data) = @_;
 <ul>
 % for my $thread ( @$data ) {
