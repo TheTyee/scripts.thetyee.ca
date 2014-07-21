@@ -62,7 +62,7 @@ __DATA__
 % for my $thread ( @$data ) {
 % next if ( $thread->{'path'} eq '/' || $thread->{'path'} eq '/ReportedElsewhere/' );
 % my $title = $thread->{'title'};
-% $title    =~ s/ | The Tyee//gi;
+% $title    =~ s/ \| The Tyee//gi;
     <li><a href="<%= $thread->{'path'} %>"><%= $title %></a></li>
 % }
 </ul>
