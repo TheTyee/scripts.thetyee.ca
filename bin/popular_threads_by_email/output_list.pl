@@ -59,6 +59,6 @@ __DATA__
 % for my $thread ( @$data ) {
 % my $title = $thread->{'title'};
 % $title    =~ s/ \| The Tyee//gi;
-    <li><a href="<%= $thread->{'url'} %>"><%= $thread->{'title'} %></a></li>
+    <li><a href="<%= $thread->{'url'} %>"><%= $title %></a></li>
 % }
 </ul>
