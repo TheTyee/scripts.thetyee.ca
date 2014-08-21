@@ -27,11 +27,11 @@ Readonly my $RESOURCE => '/shares/email.json';
 Readonly my $URL      => $API . $RESOURCE;
 
 # Set arguments for the API call: api_key, forum, limit, etc.
-my $args = { 
+my $args = {
     limit   => '10',
 };
 
-# Make request to Disqus API, check response status
+# Make request to The Tyee's widgets API, check response status
 # If the status is okay, then decode the results from JSON
 my $ua   = Mojo::UserAgent->new;
 my $res = $ua->get( $URL => form => $args )->res->body;
@@ -57,6 +57,8 @@ __DATA__
 % my ($data) = @_;
 <ul>
 % for my $thread ( @$data ) {
+% my $title = $thread->{'title'};
+% $title    =~ s/ \| The Tyee//gi;
     <li><a href="<%= $thread->{'url'} %>"><%= $thread->{'title'} %></a></li>
 % }
 </ul>
