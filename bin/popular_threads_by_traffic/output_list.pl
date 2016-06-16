@@ -18,7 +18,7 @@ my $json = Mojo::JSON->new;
 my $conf = $json->decode( $config_file );
 
 # Read the output path and filename from STDIN
-my $output_file = shift @ARGV;
+my $output_file =  shift @ARGV;
 die 'No output file specified' unless $output_file;
 
 # Set any constants
@@ -58,7 +58,7 @@ if ( $threads ) {
 __DATA__
 @@ list
 % my ($data) = @_;
-<ul>
+<ul id="most_popular">
 % for my $thread ( @$data ) {
 % next if ( $thread->{'path'} eq '/' || $thread->{'path'} eq '/ReportedElsewhere/' );
 % my $title = $thread->{'title'};
