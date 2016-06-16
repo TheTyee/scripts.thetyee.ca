@@ -57,7 +57,7 @@ if ( $threads ) {
 __DATA__
 @@ list
 % my ($data) = @_;
-<ul>
+<ul id="most_commented">
 % for my $thread ( @$data ) {
     <li><a href="<%= $thread->{'link'} %>"><%= $thread->{'title'} %></a> <span>(<%= $thread->{'posts'} %> comments)</span></li>
 % }
