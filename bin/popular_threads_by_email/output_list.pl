@@ -55,7 +55,7 @@ if ( $threads ) {
 __DATA__
 @@ list
 % my ($data) = @_;
-<ul>
+<ul id="most_emailed">
 % for my $thread ( @$data ) {
 % my $title = $thread->{'title'};
 % $title    =~ s/ \| The Tyee//gi;
