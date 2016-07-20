@@ -4,12 +4,26 @@ use Mojo::Loader;
 use Mojo::JSON;
 use Mojo::UserAgent;
 use Mojo::Template;
-use Mojo::Util qw/ encode slurp spurt /;
+use Mojo::Util qw/ encode decode slurp spurt /;
 use FindBin '$Bin';
 use Readonly;
 use utf8::all;
 use autodie;
 use Data::Dumper;
+use bytes;
+
+#!/usr/bin/perl
+use strict;
+
+# This program attempts to translate Windows CP1252 characters in UTF-8 text
+
+# This will work pretty well, except where a file has a CP1252 character in the range
+# 0xC0-0xDF followed by one in 0x80-0xBF, or one in 0xE0-0xEF followed by two in 0x80-0xBF.
+# Those (hopefully rare) cases will get translated to the wrong Unicode characters.
+
+
+
+
 
 # Read API key and forum name from a config file using autodie
 my $config_file = slurp "$Bin/conf/popular_threads_by_email.json";
@@ -46,7 +60,14 @@ if ( $threads ) {
     my $template = $loader->data( __PACKAGE__, 'list' );
     my $mt       = Mojo::Template->new;
     my $output_html = $mt->render( $template, $threads );
-    $output_html = encode 'UTF-8', $output_html;
+ 
+
+
+   $output_html = encode 'UTF-8', $output_html;
+   $output_html =~ s/â/&#8216;/g;
+    $output_html =~ s/â/&#8217;/g;
+        $output_html =~ s/\x94/'/g;
+        $output_html =~ s/Ã©/é/g;
 
     # Write the template output to a filehandle
     spurt $output_html, $output_file;
