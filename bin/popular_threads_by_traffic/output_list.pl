@@ -61,6 +61,7 @@ __DATA__
 <ul id="most_popular">
 % for my $thread ( @$data ) {
 % next if ( $thread->{'path'} eq '/' || $thread->{'path'} eq '/ReportedElsewhere/' );
+% next if ($thread->{'path'} =~ /\?utm/);
 % my $title = $thread->{'title'};
 % $title    =~ s/ \| The Tyee//gi;
     <li><a href="<%= $thread->{'path'} %>"><%= $title %></a></li>
