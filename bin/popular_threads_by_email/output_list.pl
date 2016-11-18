@@ -61,13 +61,8 @@ if ( $threads ) {
     my $mt       = Mojo::Template->new;
     my $output_html = $mt->render( $template, $threads );
  
-
-
    $output_html = encode 'UTF-8', $output_html;
-   $output_html =~ s/â/&#8216;/g;
-    $output_html =~ s/â/&#8217;/g;
-        $output_html =~ s/\x94/'/g;
-        $output_html =~ s/Ã©/é/g;
+   
 
     # Write the template output to a filehandle
     spurt $output_html, $output_file;
