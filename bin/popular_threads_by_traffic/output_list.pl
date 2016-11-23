@@ -63,7 +63,7 @@ __DATA__
 % next if ( $thread->{'path'} eq '/' || $thread->{'path'} eq '/ReportedElsewhere/' );
 % next if ($thread->{'path'} =~ /\?utm/);
 % my $title = $thread->{'title'};
-% $title    =~ s/ \| The Tyee//gi;
-    <li><a href="<%= $thread->{'path'} %>"><%= $title %></a></li>
+% my $nopipe = substr($title, 0, index($title, '|'));
+    <li><a href="<%= $thread->{'path'} %>"><%= $nopipe %></a></li>
 % }
 </ul>
