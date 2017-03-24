@@ -30,7 +30,7 @@ Readonly my $URL      => $API . $RESOURCE;
 my $args = { 
     apikey => $conf->{'api_key'},
     host   => $conf->{'host'},
-    limit   => '12',
+    limit   => '5',
     exclude_people => '5',
 };
 

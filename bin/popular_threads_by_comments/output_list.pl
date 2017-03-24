@@ -23,24 +23,30 @@ die 'No output file specified' unless $output_file;
 
 # Set any constants
 Readonly my $API      => $conf->{'api_url'};
-Readonly my $RESOURCE => '/threads/listPopular.json';
+#Readonly my $RESOURCE => '/threads/listPopular.json';
+Readonly my $RESOURCE => '/threads/update.json';
+
 Readonly my $URL      => $API . $RESOURCE;
 
 # Set arguments for the API call: api_key, forum, limit, etc.
 my $args = { 
     api_key => $conf->{'api_key'},
     forum   => $conf->{'forum'},
-    limit   => '10'
+    thread  =>    5084323550,
+    title   =>   'Food or Bus Pass? Clawback Creates Hard Choices for British Columbians with Disabilities'
+ limit   => '5'
 };
 
 # Make request to Disqus API, check response status
 # If the status is okay, then decode the results from JSON
 my $ua   = Mojo::UserAgent->new;
-my $res = $ua->get( $URL => form => $args )->res->body;
+my $res = $ua->post( $URL => form => $args )->res->body;
 my $data = $json->decode( $res );
 
 # Store the array data that we're after
 my $threads = $data->{'response'};
+
+
 
 # Render the data in a template, if we have new data
 if ( $threads ) {
@@ -49,9 +55,13 @@ if ( $threads ) {
     my $mt       = Mojo::Template->new;
     my $output_html = $mt->render( $template, $threads );
     $output_html = encode 'UTF-8', $output_html;
+use Data::Dumper;
+$ht = Dumper($threads);
+print $ht;    
 
+print Dumper($res);
     # Write the template output to a filehandle
-    spurt $output_html, $output_file;
+   # spurt $output_html, $output_file;
 };
 
 __DATA__
