@@ -42,7 +42,7 @@ Readonly my $URL      => $API . $RESOURCE;
 
 # Set arguments for the API call: api_key, forum, limit, etc.
 my $args = {
-    limit   => '10',
+    limit   => '5',
 };
 
 # Make request to The Tyee's widgets API, check response status
