@@ -30,7 +30,7 @@ Readonly my $URL      => $API . $RESOURCE;
 my $args = { 
     apikey => $conf->{'api_key'},
     host   => $conf->{'host'},
-    limit   => '5',
+    limit   => '10',
     exclude_people => '5',
 };
 
@@ -42,6 +42,7 @@ my $data = $json->decode( $res );
 
 # Store the array data that we're after
 my $threads = $data->{'pages'};
+
 
 # Render the data in a template, TODO if we have new data
 if ( $threads ) {
@@ -58,6 +59,7 @@ if ( $threads ) {
 __DATA__
 @@ list
 % my ($data) = @_;
+% my $count = 0;
 <ul id="most_popular">
 % for my $thread ( @$data ) {
 % next if ( $thread->{'path'} eq '/' || $thread->{'path'} eq '/ReportedElsewhere/' );
@@ -65,5 +67,7 @@ __DATA__
 % my $title = $thread->{'title'};
 % my $nopipe = substr($title, 0, index($title, '|'));
     <li><a href="<%= $thread->{'path'} %>"><%= $nopipe %></a></li>
+% $count++;
+% if ($count == 5) { last };
 % }
 </ul>
