@@ -62,7 +62,7 @@ __DATA__
 % my $count = 0;
 <ul id="most_popular">
 % for my $thread ( @$data ) {
-% next if ( $thread->{'path'} eq '/' || $thread->{'path'} eq '/ReportedElsewhere/' );
+% next if ( $thread->{'path'} eq '/' || $thread->{'path'} eq '/ReportedElsewhere/' || $thread->{'path'} =~ /MenChoose/ );
 % next if ($thread->{'path'} =~ /\?utm/);
 % my $title = $thread->{'title'};
 % my $nopipe = substr($title, 0, index($title, '|'));
