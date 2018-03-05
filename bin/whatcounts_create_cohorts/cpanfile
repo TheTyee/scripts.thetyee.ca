@@ -1,0 +1,16 @@
+requires 'Mojolicious', '5.61';
+requires 'IO::Socket::SSL', '1.8.4';
+requires 'Net::SSLeay', '1.8.2';
+requires 'Mojo::Loader', '0';
+requires 'Mojo::JSON', '0';
+requires 'Mojo::UserAgent', '0';
+requires 'Mojo::Template', '0';
+requires 'Mojo::Util', '0';
+requires 'Data::Dumper', '0';
+requires 'Readonly', '0';
+requires 'utf8::all', '0';
+requires 'autodie', '0';
+requires 'IO::Socket::SSL', '1.75';
+requires 'IO::All', '';
+requires 'Text::CSV', '';
+requires 'DateTime', '';
