@@ -102,7 +102,6 @@ sub subscriber_update {
 
 sub _post_to_whatcounts {
     my $subscriber = shift;
-    say "Posting: " . Dumper( $subscriber );
     my $email  = $subscriber->{'email'};
     my $cohort = $subscriber->{'custom_cohort'};
     my $id     = $subscriber->{'subscriber_id'};
