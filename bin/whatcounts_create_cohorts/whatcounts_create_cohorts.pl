@@ -80,6 +80,9 @@ sub subscriber_check {
     my $subscribers = shift;
     my @subs_to_update;
     for my $sub ( @$subscribers ) {
+        # We're going to sneakily use the Fax field to indicate records that
+        # have been imported, so they are not assigned a cohort
+        next if $sub->{'fax'} eq 'cohort_skip';
         # Only update subscribers with a created date that matches their update date
         # i.e., new subscribers, not existing updates from Recurly sync, etc.
         if ( $sub->{'created_date'} =~ $ymd_yesterday ) {
