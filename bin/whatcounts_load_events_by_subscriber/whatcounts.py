@@ -85,7 +85,7 @@ def get_data_from_csv(filename):
     return leads
 
 def search_for_subscriber(identifier):
-    searchforsub = {'email': 'beamc.jpc@hotmail.com'}
+    searchforsub = {'email': ''}
     endpointforsubs = 'https://secure.whatcounts.net/rest/subscribers'
 
     r = requests.get(endpointforsubs, params=searchforsub, auth=(config.wc_realm, config.wc_realmpw))
