@@ -9,9 +9,13 @@ from sqlalchemy import Column, Integer, String, DateTime
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy import event
+from sqlalchemy.schema import CreateSchema
+from sqlalchemy import DDL
 Session = sessionmaker()
 
 Base = declarative_base()
+event.listen(Base.metadata, 'before_create', DDL("CREATE SCHEMA IF NOT EXISTS whatcounts"))
 db_url = f'postgresql+psycopg2://{config.db_user}:{config.db_pass}@localhost/{config.db_name}'
 
 engine = sqlalchemy.create_engine(db_url)
@@ -20,6 +24,7 @@ session = Session()
 
 class Lead(Base):
     __tablename__ = 'leads'
+    __table_args__ = {'schema': 'whatcounts'}
 
     id = Column(Integer, primary_key=True)
     email = Column(String, unique=True)
@@ -30,7 +35,8 @@ class Lead(Base):
 
 class Event(Base):
     __tablename__ = 'events'
-
+    __table_args__ = {'schema': 'whatcounts'}
+    
     id = Column(Integer, primary_key=True)
     trackingid = Column(Integer, unique=True)
     subscriberid = Column(Integer, ForeignKey(Lead.subscriberid))
@@ -42,11 +48,12 @@ class Event(Base):
     lead = relationship("Lead", back_populates="events")
 
     def __repr__(self):
-        return "<Event(subscriberid='%s', eventtype='%s')>" % (self.subscriberid, self.eventtype)
+        return "<Event(subscriberid='%s', eventtype='%s')>" % (self.subscriberid, self.trackingeventtype)
 
 Lead.events = relationship("Event", order_by=Event.trackingid, back_populates="lead")
 
 Base.metadata.create_all(engine)
+
 
 # Generic upsert
 def get_or_create(session, model, **kwargs):
@@ -66,7 +73,7 @@ def get_or_create(session, model, **kwargs):
 
 
 # TODO move into function
-searchforsub = {'email': ''}
+searchforsub = {'email': 'beamc.jpc@hotmail.com'}
 endpointforsubs = 'https://secure.whatcounts.net/rest/subscribers'
 
 r = requests.get(endpointforsubs, params=searchforsub, auth=(config.wc_realm, config.wc_realmpw))
@@ -75,15 +82,12 @@ r = requests.get(endpointforsubs, params=searchforsub, auth=(config.wc_realm, co
 subscribers = r.json()
 # Get the object
 subscriber = subscribers[0]
-print(subscriber)
 
 # Get the ID
 subscriberid = subscriber["subscriberId"]
 email = subscriber["email"]
 
-# new_lead = Lead(email=email, subscriberid=subscriberid)
 new_lead = get_or_create(session, Lead, email=email, subscriberid=subscriberid)
-print(new_lead)
 
 # TODO Move into function
 # Docs: https://support.whatcounts.com/hc/en-us/articles/210396566-Report-Subscriber-Events-by-Subscriber-ID
@@ -92,15 +96,14 @@ print(new_lead)
 # start=[yyyy-mm-dd]
 # end=[yyyy-mm-dd]
 # eventType=[eventType]
-searchforevents = {'start': '2019-03-01', 'eventType': 'SENT'}
+searchforevents = {'start': '2019-03-01'}
 endpointforevents = f'https://secure.whatcounts.net/rest/subscribers/{subscriberid}/events'
 r = requests.get(endpointforevents, params=searchforevents, auth=(config.wc_realm, config.wc_realmpw))
 eventsjson = r.json()
 events = eventsjson["events"]
 
 for event in events:
-    print (event)
-    get_or_create(session, Event, 
+    records = get_or_create(session, Event, 
         trackingid = event["trackingId"],
         subscriberid = subscriberid,
         trackingeventdate = event["trackingEventDate"],
