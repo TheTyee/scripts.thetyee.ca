@@ -3,3 +3,4 @@ conf
 *.csv
 local
 cpanfile.snapshot
+.vscode
