@@ -79,16 +79,23 @@ def get_or_create(session, model, **kwargs):
         session.commit()
         return instance
 
-def get_data_from_csv(filename):
+def get_data_from_csv(filename, lead_source):
     with open(filename, 'rt') as csvfile:
         reader = csv.DictReader(csvfile)
         leads = []
         for row in reader:
-            leads.append(row['email']) 
+            lead = {
+                'email': row['email'], 
+                'ad_name': row['ad_name'], 
+                'edition': row['which_edition_would_you_like?'],
+                'lead_source': lead_source
+            }
+            leads.append(lead) 
     return leads
 
-def search_for_subscriber(identifier):
-    searchforsub = {'email': ''}
+def search_for_subscriber(lead):
+    email = lead['email']
+    searchforsub = {'email': email}
     endpointforsubs = 'https://secure.whatcounts.net/rest/subscribers'
 
     r = requests.get(endpointforsubs, params=searchforsub, auth=(config.wc_realm, config.wc_realmpw))
@@ -98,12 +105,22 @@ def search_for_subscriber(identifier):
     # Get the object
     subscriber = subscribers[0]
 
-    # Get the ID
-    subscriberid = subscriber["subscriberId"]
-    email = subscriber["email"]
+    # TODO Check if we got the ID
+    lead['subscriberid'] = subscriber['subscriberId']
+    return lead
 
-def store_subscriber_data(subscriber):
-    new_lead = get_or_create(session, Lead, email=email, subscriberid=subscriberid)
+
+def store_subscriber_data(s):
+    # TODO 
+    # Extract the email and id from the params
+    new_lead = get_or_create(session, Lead, 
+        email=s['email'],
+        subscriberid=s['subscriberid'],
+        ad_name=s['ad_name'],
+        edition=s['edition'],
+        lead_source=s['lead_source']
+    )
+    return new_lead
 
 def get_subscriber_events(subscriberid):
     # TODO Move into function
@@ -116,28 +133,43 @@ def get_subscriber_events(subscriberid):
     searchforevents = {'start': '2019-03-01'}
     endpointforevents = f'https://secure.whatcounts.net/rest/subscribers/{subscriberid}/events'
     r = requests.get(endpointforevents, params=searchforevents, auth=(config.wc_realm, config.wc_realmpw))
-    eventsjson = r.json()
-    events = eventsjson["events"]
+    events_obj = r.json()
+    return events_obj
 
-def store_events_data(events):
+def store_events_data(events_obj):
+    records = []
+    events = events_obj["events"]
     for event in events:
-        records = get_or_create(session, Event, 
+        record = get_or_create(session, Event, 
             trackingid = event["trackingId"],
-            subscriberid = subscriberid,
+            subscriberid = events_obj["subscriberId"],
             trackingeventdate = event["trackingEventDate"],
             trackingcampaign = event["trackingCampaignId"],
             trackingeventtype = event["eventType"],
             trackingclickthroughid = event["trackingClickthroughId"]
         )
-
+    records.append(record)
+    return records
+    
 if __name__ == '__main__':
     # TODO
     # Set a default filename, e.g., leads.csv
     filename = sys.argv[1]
-    leads = get_data_from_csv(filename)
+    lead_source = sys.argv[2]
+    leads = get_data_from_csv(filename, lead_source)
     for lead in leads:
+        print("Lead:", lead)
         # Search for a match in WC
+        wc_sub = search_for_subscriber(lead)
+        print("Found a sub:", wc_sub)
         # If matched, store the data, get back the id
+        #TODO Check for actual success!
+        lead_record = store_subscriber_data(wc_sub)
+        print("Stored:", lead_record)
         # Lookup the events for the id
-        # Store the events
-        print("WIP")
+        events_obj = get_subscriber_events(lead_record.subscriberid)
+        print("We got", len(events_obj["events"]), "events" )
+        # TODO check for > 0 events
+        results = store_events_data(events_obj)
+        count = session.query(Event).filter(Event.subscriberid == lead_record.subscriberid).count()
+        print("We got", count, "results back from the db")
