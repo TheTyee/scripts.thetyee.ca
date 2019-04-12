@@ -34,6 +34,9 @@ class Lead(Base):
     id = Column(Integer, primary_key=True)
     email = Column(String, unique=True)
     subscriberid = Column(Integer, unique=True)
+    ad_name = Column(String)
+    edition = Column(String)
+    lead_source = Column(String)
 
     def __repr__(self):
         return "<Lead(email='%s', subscriberId='%s')>" % (self.email, self.subscriberid)
