@@ -3,7 +3,8 @@ import sys
 import csv
 import requests
 import json
-import datetime
+from datetime import datetime
+import logging
 import sqlalchemy
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, DateTime
@@ -13,6 +14,11 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy import event
 from sqlalchemy.schema import CreateSchema
 from sqlalchemy import DDL
+
+#Logging set-up
+today =  datetime.now().isoformat(timespec='minutes')
+logfilename = f'import-{today}.log'
+logging.basicConfig(filename=logfilename,level=logging.INFO)
 
 # Database set-up
 Base = declarative_base()
