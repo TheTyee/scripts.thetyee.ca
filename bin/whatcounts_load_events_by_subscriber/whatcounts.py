@@ -7,7 +7,7 @@ from datetime import datetime
 import logging
 import sqlalchemy
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import Column, Integer, String, DateTime, JSON
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm import sessionmaker
@@ -43,6 +43,7 @@ class Lead(Base):
     ad_name = Column(String)
     edition = Column(String)
     lead_source = Column(String)
+    data = Column(JSON)
 
     def __repr__(self):
         return "<Lead(email='%s', subscriberId='%s')>" % (self.email, self.subscriberid)
@@ -85,7 +86,8 @@ def progress(count, total, status=''):
 
 # Generic upsert for adding records to the database
 def get_or_create(session, model, **kwargs):
-    instance = session.query(model).filter_by(**kwargs).first()
+    unique_key = kwargs['subscriberid']
+    instance = session.query(model).filter_by(subscriberid=unique_key).first()
     if instance:
         return instance
     else:
@@ -125,7 +127,8 @@ def store_subscriber_data(lead):
         subscriberid=s['subscriberId'],
         ad_name=lead['ad_name'],
         edition=lead['edition'],
-        lead_source=lead['lead_source']
+        lead_source=lead['lead_source'],
+        data=s
     )
     return new_lead
 
