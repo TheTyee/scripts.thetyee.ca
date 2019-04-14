@@ -4,3 +4,4 @@ conf
 local
 cpanfile.snapshot
 .vscode
+*.log
