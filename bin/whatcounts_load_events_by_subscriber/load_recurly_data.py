@@ -37,7 +37,8 @@ for instance in session.query(Lead).order_by(Lead.id):
         logging.info("Found record for %s", instance.email)
     except:
         logging.info("Account not found for %s", instance.email)
-    else: 
+    else:
+        # TODO Check for existing record first, only insert new records
         instance.recurly_entry = True
         instance.recurly_created = account.created_at
         instance.recurly_subscription = account.has_active_subscription
@@ -46,7 +47,7 @@ for instance in session.query(Lead).order_by(Lead.id):
                 transactionid=transaction.uuid,
                 created_at=transaction.created_at,
                 action=transaction.action,
-                amount_in_cents=transaction.amount_in_cents,
+                amount_in_dollars=transaction.amount_in_cents/100,
                 status=transaction.status
             ))
             session.commit()
