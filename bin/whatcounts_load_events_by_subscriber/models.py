@@ -51,7 +51,7 @@ class Transaction(Base):
     subscriberid = Column(Integer, ForeignKey(Lead.subscriberid))
     created_at = Column(DateTime())
     action = Column(String)
-    amount_in_cents = Column(Integer)
+    amount_in_dollars = Column(Integer)
     status = Column(String)
 
     lead = relationship("Lead", back_populates="transactions")
