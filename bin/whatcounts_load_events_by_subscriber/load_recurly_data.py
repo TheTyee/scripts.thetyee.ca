@@ -14,10 +14,10 @@ from sqlalchemy.schema import CreateSchema
 from sqlalchemy import DDL
 import recurly
 
-#Logging set-up
-today =  datetime.now().isoformat(timespec='minutes')
+# Logging set-up
+today = datetime.now().isoformat(timespec='minutes')
 logfilename = f'rucurly-{today}.log'
-logging.basicConfig(filename=logfilename,level=logging.INFO)
+logging.basicConfig(filename=logfilename, level=logging.INFO)
 
 db_url = f'postgresql+psycopg2://{config.db_user}:{config.db_pass}@localhost/{config.db_name}'
 engine = sqlalchemy.create_engine(db_url)
