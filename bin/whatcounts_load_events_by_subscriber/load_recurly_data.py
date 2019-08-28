@@ -77,13 +77,14 @@ def update_account_status(lead, account):
     lead.recurly_subscription = account.has_active_subscription
     session.commit()
 
-def store_transaction(transaction):
+def store_transaction(transaction, lead):
         trans_obj = get_or_create(session, Transaction, 
             transactionid=transaction.uuid,
             created_at=transaction.created_at,
             action=transaction.action,
             amount_in_dollars=transaction.amount_in_cents/100,
-            status=transaction.status
+            status=transaction.status,
+            subscriberid=lead.subscriberid
         )
         return trans_obj.transactionid
 
@@ -119,7 +120,8 @@ if __name__ == '__main__':
         trans_len = 0
         for transaction in account.transactions():
             trans_len += 1
-            trans_id = store_transaction(transaction)
+            lead = session.query(Lead).filter(Lead.email == account.account_code).first()
+            trans_id = store_transaction(transaction, lead)
             transactions.append(trans_id)
         print("Stored", trans_len, "transactions for ", account.account_code  )
     print("Totoal transactions stored:", len(transactions))
