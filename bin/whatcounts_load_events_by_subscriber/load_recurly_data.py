@@ -91,7 +91,7 @@ def store_transaction(transaction):
 if __name__ == '__main__':
     # Get leads from db
     leads = session.query(Lead).order_by(Lead.id)
-    # leads = session.query(Lead).filter(Lead.email == 'maksaviation@hotmail.com')
+    # leads = session.query(Lead).filter(Lead.email == '')
     leads_count = leads.count()
     print("Got ", leads_count)
     logging.info("Got %s leads", leads_count)
