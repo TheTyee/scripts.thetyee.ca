@@ -30,7 +30,7 @@ Readonly my $URL      => $API . $RESOURCE;
 my $args = { 
     apikey => $conf->{'api_key'},
     host   => $conf->{'host'},
-    limit   => '10',
+    limit   => '20',
     exclude_people => '5',
 };
 
@@ -60,14 +60,14 @@ __DATA__
 @@ list
 % my ($data) = @_;
 % my $count = 0;
-<ul id="most_popular">
 % for my $thread ( @$data ) {
 % next if ( $thread->{'path'} eq '/' || $thread->{'path'} eq '/ReportedElsewhere/' || $thread->{'path'} =~ /MenChoose/ );
 % next if ($thread->{'path'} =~ /\?utm/);
 % my $title = $thread->{'title'};
 % my $nopipe = substr($title, 0, index($title, '|'));
-    <li><a href="<%= $thread->{'path'} %>"><%= $nopipe %></a></li>
+<article class="story-item story-item--index-page story-item--minimum">
+      	<h2 class="story-item__headline"><a href="<%= $thread->{'path'} %>"><%= $nopipe %></a></h2>
+      </article>
 % $count++;
 % if ($count == 5) { last };
 % }
-</ul>

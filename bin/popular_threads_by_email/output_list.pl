@@ -71,10 +71,10 @@ if ( $threads ) {
 __DATA__
 @@ list
 % my ($data) = @_;
-<ul id="most_emailed">
 % for my $thread ( @$data ) {
 % my $title = $thread->{'title'};
 % $title    =~ s/ \| The Tyee//gi;
-    <li><a href="<%= $thread->{'url'} %>"><%= $title %></a></li>
+<article class="story-item story-item--index-page story-item--minimum">
+      	<h2 class="story-item__headline"><a href="<%= $thread->{'url'} %>"><%= $title %></a></h2>
+      </article>
 % }
-</ul>
