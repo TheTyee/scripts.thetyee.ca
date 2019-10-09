@@ -30,7 +30,7 @@ Readonly my $URL      => $API . $RESOURCE;
 my $args = { 
     api_key => $conf->{'api_key'},
     forum   => $conf->{'forum'},
-    limit   => '5'
+    limit   => '3\'
 };
 
 # Make request to Disqus API, check response status
